@@ -10,7 +10,9 @@ export default function Day({ params: { relativeDay } }: Props) {
     <tr key={entry.food.name}>
       <th>{entry.food.name}</th>
       <td>{entry.food.unit}</td>
-      <td>{entry.food.amount}</td>
+      <td>
+        {entry.food.strategy === 'max' ? 'max' : ''} {entry.food.amount}
+      </td>
       <td>{entry.log.reduce((result, x) => result + x, 0)}</td>
       <td>
         <a href={`/day/${relativeDay}/food/${entry.food.name}`}>Fill</a>
