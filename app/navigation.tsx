@@ -1,4 +1,4 @@
-import { NavButton } from "./nav-button";
+import { NavButton } from "./components/nav-button";
 
 export default function Navigation() {
   return (
