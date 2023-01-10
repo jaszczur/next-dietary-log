@@ -6,10 +6,15 @@ export interface FoodType {
   amount: number;
 }
 
+export interface SingleLoggedFood {
+  amount: number;
+  comment: string;
+}
+
 export interface FoodLogEntry {
   date: string;
   food: FoodType;
-  log: number[];
+  log: SingleLoggedFood[];
 }
 
 export interface FoodLog {
@@ -76,7 +81,10 @@ export function foodLog(date: string): FoodLog {
     entries: foodTypes().map((food) => ({
       date,
       food,
-      log: [],
+      log: [
+        { amount: 1.0, comment: 'jabłko' },
+        { amount: 0.5, comment: 'mandarynka' },
+      ],
     })),
   };
 }

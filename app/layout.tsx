@@ -1,6 +1,6 @@
-import Footer from "./components/footer";
-import "./globals.css";
-import Navigation from "./navigation";
+import Footer from './components/footer';
+import './globals.css';
+import Navigation from './navigation';
 
 export default function RootLayout({
   children,
@@ -15,7 +15,7 @@ export default function RootLayout({
       */}
       <head />
       <body>
-        <div className="flex flex-col h-screen">
+        <div className="flex h-screen flex-col">
           <div className="py-4 px-2">
             <Navigation />
           </div>
