@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "next dev",
+    "dev:turbo": "next dev --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -17,8 +18,9 @@
   },
   "dependencies": {
     "clsx": "1.2.1",
-    "next": "latest",
     "daisyui": "^2.46.1",
+    "nanoid": "^4.0.0",
+    "next": "latest",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },

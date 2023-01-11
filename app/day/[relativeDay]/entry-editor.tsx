@@ -6,9 +6,15 @@ type Props = {
   entry: FoodLogEntry;
   onRemove?: (idx: number) => void;
   onAdd?: (entry: SingleLoggedFood) => void;
+  mutating?: boolean;
 };
 
-export default function EntryEditor({ entry, onRemove, onAdd }: Props) {
+export default function EntryEditor({
+  entry,
+  onRemove,
+  onAdd,
+  mutating,
+}: Props) {
   const [comment, setComment] = useState('');
   const [amount, setAmount] = useState('');
   return (
@@ -22,17 +28,19 @@ export default function EntryEditor({ entry, onRemove, onAdd }: Props) {
         <div className="left flex flex-col p-2">
           <div className="flex flex-col">
             <input
+              onChange={(evt) => setAmount(evt.target.value)}
               type="text"
               placeholder="Amount"
               className="input-bordered input max-w-xs"
             />
             <input
+              onChange={(evt) => setComment(evt.target.value)}
               type="text"
               placeholder="Comment"
               className="input-bordered input max-w-xs"
             />
             <button
-              className="btn-primary btn"
+              className={`btn-primary btn ${mutating ? 'loading' : ''}`}
               onClick={() => {
                 if (onAdd) onAdd({ comment, amount: Number(amount) });
               }}

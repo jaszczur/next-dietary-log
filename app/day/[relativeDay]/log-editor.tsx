@@ -1,15 +1,46 @@
 'use client';
 
-import { useState } from 'react';
-import { FoodLog, FoodLogEntry } from '../../model/food-types';
+import { useRouter } from 'next/navigation';
+import { useState, useTransition } from 'react';
+import {
+  FoodLog,
+  FoodLogEntry,
+  SingleLoggedFood,
+} from '../../model/food-types';
 import EntryEditor from './entry-editor';
 
 type Props = { foodLog: FoodLog };
 
 export default function FoodLogEditor({ foodLog }: Props) {
-  const [selectedEntry, setSelectedEntry] = useState<FoodLogEntry | undefined>(
+  const [selectedFoodId, setSelectedFoodId] = useState<string | undefined>(
     undefined,
   );
+  const router = useRouter();
+  const [isFetching, setIsFetching] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const isMutating = isFetching || isPending;
+  const selectedEntry =
+    selectedFoodId === undefined
+      ? undefined
+      : foodLog.entries.find((e) => e.food.id === selectedFoodId);
+
+  const addMeal = async (entry: SingleLoggedFood) => {
+    if (!selectedEntry || entry.comment === '' || entry.amount <= 0.0) return;
+
+    setIsFetching(true);
+    await fetch(`/api/log/${foodLog.date}/entries/${selectedEntry.food.id}`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify([...selectedEntry.log, entry]),
+    });
+    setIsFetching(false);
+
+    startTransition(() => {
+      // Refresh the current route and fetch new data from the server without
+      // losing client-side browser or React state.
+      router.refresh();
+    });
+  };
 
   const rows = foodLog.entries.map((entry) => {
     const active = selectedEntry?.food === entry.food;
@@ -24,7 +55,7 @@ export default function FoodLogEditor({ foodLog }: Props) {
         <td>
           <button
             className={`btn-sm btn ${active ? 'btn-disabled' : ''}`}
-            onClick={() => setSelectedEntry(entry)}
+            onClick={() => setSelectedFoodId(entry.food.id)}
           >
             Fill
           </button>
@@ -50,7 +81,13 @@ export default function FoodLogEditor({ foodLog }: Props) {
       </div>
 
       <div className="pl-8">
-        {selectedEntry && <EntryEditor entry={selectedEntry} />}
+        {selectedEntry && (
+          <EntryEditor
+            entry={selectedEntry}
+            onAdd={addMeal}
+            mutating={isMutating}
+          />
+        )}
       </div>
     </div>
   );
