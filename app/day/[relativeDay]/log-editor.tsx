@@ -44,6 +44,8 @@ export default function FoodLogEditor({ foodLog }: Props) {
 
   const rows = foodLog.entries.map((entry) => {
     const active = selectedEntry?.food === entry.food;
+    const meals = entry.log.length;
+    const hasMeals = meals > 0;
     return (
       <tr key={entry.food.name} className={active ? 'active' : ''}>
         <th>{entry.food.name}</th>
@@ -54,10 +56,11 @@ export default function FoodLogEditor({ foodLog }: Props) {
         <td>{entry.log.reduce((result, food) => result + food.amount, 0)}</td>
         <td>
           <button
-            className={`btn-sm btn ${active ? 'btn-disabled' : ''}`}
+            className={`btn-sm btn gap-2 ${active ? 'btn-disabled' : ''}`}
             onClick={() => setSelectedFoodId(entry.food.id)}
           >
-            Fill
+            Meals
+            {hasMeals && <div className="badge-secondary badge">{meals}</div>}
           </button>
         </td>
       </tr>
